@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#120a2a" />
+  <title>Cachipún 3D · Tres en línea a la chilena</title>
+  <meta name="description" content="Cachipún 3D — un tres en línea (gato) chileno con visuales impresionantes hechos en Three.js: vidrio refractivo, bloom y partículas. Juega contra la CPU o un amigo." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%8A%3C/text%3E%3C/svg%3E" />
+
+  <!-- Three.js is vendored under /vendor so the game has no runtime CDN
+       dependency: it works offline and survives any CDN hiccup. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.js",
+      "three/addons/": "./vendor/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Loading veil -->
+  <div id="loader" class="loader">
+    <div class="loader__spinner"></div>
+    <div class="loader__text">cargando el cachipún…</div>
+  </div>
+
+  <!-- 3D canvas mounts here -->
+  <canvas id="scene"></canvas>
+
+  <!-- Glass UI overlay -->
+  <div id="ui" class="ui">
+    <header class="topbar">
+      <div class="brand">
+        <h1 class="brand__title">CACHIPÚN <span>3D</span></h1>
+        <p class="brand__sub">tres en línea a la chilena</p>
+      </div>
+      <div class="topbar__actions">
+        <button id="modeBtn" class="chip" title="Cambiar modo de juego">
+          <span class="chip__icon">🤖</span><span id="modeLabel">vs CPU</span>
+        </button>
+        <button id="soundBtn" class="chip" title="Activar / silenciar sonido">
+          <span id="soundIcon">🔊</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="scoreboard">
+      <div class="score score--x">
+        <span class="score__tag" id="tagX">Tú</span>
+        <span class="score__val" id="scoreX">0</span>
+      </div>
+      <div class="score score--draw">
+        <span class="score__tag">Empates</span>
+        <span class="score__val" id="scoreD">0</span>
+      </div>
+      <div class="score score--o">
+        <span class="score__tag" id="tagO">CPU</span>
+        <span class="score__val" id="scoreO">0</span>
+      </div>
+    </section>
+
+    <div class="status" id="status">Turno de <b>X</b></div>
+
+    <footer class="bottombar">
+      <button id="resetBtn" class="btn">Nueva mano</button>
+      <button id="clearBtn" class="btn btn--ghost">Reiniciar marcador</button>
+    </footer>
+
+    <p class="hint">Hecho con Three.js · el estado se guarda solo en tu navegador</p>
+  </div>
+
+  <!-- Win banner -->
+  <div id="banner" class="banner">
+    <div class="banner__card">
+      <div class="banner__emoji" id="bannerEmoji">🎉</div>
+      <div class="banner__title" id="bannerTitle">¡Ganaste!</div>
+      <div class="banner__sub" id="bannerSub">Pura pinta nomás</div>
+      <button id="bannerBtn" class="btn">Otra vez</button>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
