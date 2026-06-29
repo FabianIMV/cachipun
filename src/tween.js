@@ -1,5 +1,7 @@
 // Tiny dependency-free tween engine driven from the render loop.
 // Lets us do GSAP-style eased animations without an extra library.
+// NOTE: durations and delays are in SECONDS, matching the per-frame
+// delta time (also seconds) that the render loop passes to updateTweens.
 
 const active = [];
 
@@ -25,7 +27,8 @@ export const Ease = {
   },
 };
 
-export function tween({ duration = 600, delay = 0, ease = Ease.outCubic, onUpdate, onComplete }) {
+// duration / delay are in seconds.
+export function tween({ duration = 0.6, delay = 0, ease = Ease.outCubic, onUpdate, onComplete }) {
   const t = { elapsed: -delay, duration, ease, onUpdate, onComplete, done: false };
   active.push(t);
   return t;

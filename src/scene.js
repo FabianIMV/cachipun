@@ -105,7 +105,7 @@ export function createScene(canvas, { onCellClick }) {
       board.hover.position.set(target.x, BOARD_TOP + 0.02, target.z);
     }
     tween({
-      duration: 250,
+      duration: 0.25,
       ease: Ease.outCubic,
       onUpdate: (v) => {
         const from = board.hover.material.opacity;
@@ -173,11 +173,16 @@ export function createScene(canvas, { onCellClick }) {
       piece.position.y = BOARD_TOP + 2.4;
       piece.rotation.y = Math.PI;
       tween({
-        duration: 650, ease: Ease.outBack,
+        duration: 0.65, ease: Ease.outBack,
         onUpdate: (v) => {
           piece.scale.setScalar(0.01 + v * 0.99);
           piece.position.y = THREE.MathUtils.lerp(BOARD_TOP + 2.4, BOARD_TOP + 0.25, v);
           piece.rotation.y = Math.PI * (1 - v);
+        },
+        onComplete: () => {
+          piece.scale.setScalar(1);
+          piece.position.y = BOARD_TOP + 0.25;
+          piece.rotation.y = 0;
         },
       });
     }
@@ -188,7 +193,7 @@ export function createScene(canvas, { onCellClick }) {
       if (!p) return;
       if (animate) {
         tween({
-          duration: 420, ease: Ease.inOutCubic,
+          duration: 0.42, ease: Ease.inOutCubic,
           onUpdate: (v) => {
             p.scale.setScalar(1 - v);
             p.position.y = BOARD_TOP + 0.25 + v * 1.6;
@@ -215,7 +220,7 @@ export function createScene(canvas, { onCellClick }) {
     line.forEach((idx, k) => {
       const cell = board.cells[idx];
       tween({
-        duration: 500, delay: k * 90, ease: Ease.outCubic,
+        duration: 0.5, delay: k * 0.09, ease: Ease.outCubic,
         onUpdate: (v) => {
           cell.material.emissive.copy(color);
           cell.material.emissiveIntensity = v * 1.2;
@@ -225,7 +230,7 @@ export function createScene(canvas, { onCellClick }) {
       const piece = pieces[idx];
       if (piece) {
         tween({
-          duration: 1400, delay: k * 90, ease: Ease.outElastic,
+          duration: 1.4, delay: k * 0.09, ease: Ease.outElastic,
           onUpdate: (v) => { piece.position.y = BOARD_TOP + 0.25 + Math.sin(v * Math.PI) * 0.35; },
         });
       }
@@ -294,15 +299,20 @@ export function createScene(canvas, { onCellClick }) {
   }
 
   // ---------- loop ----------
-  const clock = new THREE.Clock();
+  // Drive timing off the rAF timestamp (monotonic, performance.now based)
+  // rather than THREE.Clock — more robust across browsers/headless.
   let camPulse = 0;
+  let startTime = 0;
+  let lastTime = 0;
 
   function celebrate() { camPulse = 1; }
 
-  function animate() {
+  function animate(now) {
     requestAnimationFrame(animate);
-    const dt = Math.min(clock.getDelta(), 0.05);
-    const t = clock.elapsedTime;
+    if (!startTime) { startTime = now; lastTime = now; }
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+    const t = (now - startTime) / 1000;
 
     updateTweens(dt);
     updateConfetti(dt);
@@ -320,7 +330,7 @@ export function createScene(canvas, { onCellClick }) {
 
     composer.render();
   }
-  animate();
+  requestAnimationFrame(animate);
 
   // ---------- resize ----------
   window.addEventListener("resize", () => {
