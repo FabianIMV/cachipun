@@ -1,10 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
+  # GitHub Pages only deploys from the default branch, so we trigger on
+  # main only. Runs from other branches would just fail at the deploy step.
   push:
     branches:
       - main
-      - claude/3d-cachipun-game-d23abx
   workflow_dispatch:
 
 permissions:

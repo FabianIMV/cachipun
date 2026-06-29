@@ -83,9 +83,8 @@ Activa Pages una vez en **Settings → Pages → Source: GitHub Actions** y haz 
 **EN** — Ships with `.github/workflows/deploy.yml` that auto-publishes. Enable Pages
 once at **Settings → Pages → Source: GitHub Actions** and push.
 
-> Si despliegas desde una rama distinta a la default, permítela en
-> *Settings → Environments → github-pages*. / If deploying from a non-default branch,
-> allow it under *Settings → Environments → github-pages*.
+> El deploy corre solo en `main` (GitHub Pages publica desde la rama por defecto).
+> / Deploy runs on `main` only (GitHub Pages publishes from the default branch).
 
 ---
 
